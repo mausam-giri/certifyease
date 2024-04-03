@@ -1,24 +1,33 @@
-import { useRef, useState } from "react";
+import Konva from "konva";
+import { RefObject, useRef, useState } from "react";
+import useImage from "use-image";
 
 interface ImageUploadAreaProps {
-  backgroundImage?: string;
-  setBackgroundImage: (value: string) => void;
+  onImageUpload?: (imageUrl: string) => void;
 }
 
-export default function ImageUploadArea(props: ImageUploadAreaProps) {
-  const { backgroundImage, setBackgroundImage } = props;
+export type ImageItemKind = {
+  "data-item-type": string;
+  id: string;
+  name: string;
+  src: string;
+  image: typeof Image;
+};
 
+export default function ImageUploadArea(props: ImageUploadAreaProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // const imageRef = useRef() as RefObject<Konva.Image>;
+  const [imageSrc, setImageSrc] = useState<string>("");
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const cachedURL = URL.createObjectURL(file);
-      setBackgroundImage(cachedURL);
-      // setBackgroundImage(file);
-    }
+    if (!file) return;
+    setSelectedFile(file);
+    const imageUrl = URL.createObjectURL(file);
+    setImageSrc(imageUrl);
+    props.onImageUpload!(imageUrl);
   };
 
   const handleImageUpload = () => {
@@ -41,7 +50,7 @@ export default function ImageUploadArea(props: ImageUploadAreaProps) {
               <>
                 <img
                   className="absolute w-full h-full object-cover z-0 rounded-lg"
-                  src={backgroundImage}
+                  src={imageSrc}
                   alt={selectedFile.name}
                 />
                 <div className="flex flex-col gap-3 w-full bg-white bg-opacity-80 p-4 rounded-b-lg absolute bottom-0">

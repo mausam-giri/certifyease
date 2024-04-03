@@ -23,7 +23,9 @@ function App() {
               <h1>CertifyEase</h1>
               <h2>Crafting Certificates, Delighting Recipients</h2>
               <div>
-                <button>Get Started</button>
+                <button>
+                  <Link to="template">Get Started</Link>
+                </button>
               </div>
             </div>
             <div></div>

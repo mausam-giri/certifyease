@@ -1,12 +1,15 @@
-// import Editor from "@/components/Editor";
+import { useState } from "react";
 import Editor from "@/components/Editor";
 import ImageUploadArea from "@/components/template/ImageUploadArea";
 import { RightIcon, SaveIcon } from "@/icons";
-import { useState } from "react";
 
 export default function Template() {
   const [showeditor, setShowEditor] = useState(false);
-  const [backgroundImage, setBackgroundImage] = useState<unknown>();
+  const [backgroundImage, setBackgroundImage] = useState<string>("");
+
+  const handleImageUpload = (imageUrl: string) => {
+    if (imageUrl) setBackgroundImage(imageUrl);
+  };
 
   return (
     <div className="w-full min-h-screen">
@@ -28,7 +31,7 @@ export default function Template() {
             <div className="flex-1 space-y-2 p-4">
               <ImageUploadArea
                 // backgroundImage={backgroundImage}
-                setBackgroundImage={setBackgroundImage}
+                onImageUpload={handleImageUpload}
               />
               <div>
                 <button
@@ -42,12 +45,9 @@ export default function Template() {
             </div>
           ) : (
             <Editor backgroundImage={backgroundImage} />
+            // <div></div>
           )}
           {/* Sidebar */}
-          <div className="w-[200px] flex flex-col p-4 bg-gray-200">
-            <p>Certificate Template name</p>
-            <div></div>
-          </div>
         </div>
       </div>
     </div>

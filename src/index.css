@@ -31,6 +31,10 @@
   }
 }
 
+.less-visible {
+  opacity: 80%;
+}
+
 /* 
 a {
   font-weight: 500;
