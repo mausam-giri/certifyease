@@ -10,7 +10,9 @@ import {
   Circle,
 } from "react-konva";
 import useImage from "use-image";
-import { EditIcon, ImageIcon, SquareIcon, TextIcon } from "@/icons";
+import { CircleIcon, EditIcon, ImageIcon, SquareIcon, TextIcon } from "@/icons";
+import PropertiesPanel from "./template/PropertiesPanel";
+import ItemPanel from "./template/ItemPanel";
 
 interface EditorProps {
   backgroundImage: string;
@@ -69,6 +71,7 @@ export default function Editor(props: EditorProps) {
   const [items, setItems] = useState<ItemTypeProps[]>([]);
   const [itemType, setItemType] = useState<ItemType | null>(null);
   const [dragDropData, setDragDropData] = useState<ItemTypeProps>({});
+
   function handleDragStart(
     e: React.DragEvent<HTMLDivElement>,
     itemType: ItemType
@@ -101,7 +104,9 @@ export default function Editor(props: EditorProps) {
     if (!item) return;
     switch (item.type) {
       case ItemType.CIRCLE:
-        return <Circle x={item.x} y={item.y} fill="blue" radius={20} />;
+        return (
+          <Circle x={item.x} y={item.y} fill="blue" radius={20} draggable />
+        );
       case ItemType.RECTANGLE:
         return (
           <Rect
@@ -172,8 +177,7 @@ export default function Editor(props: EditorProps) {
           <EditIcon className="w-6 h-6 cursor-pointer hover:bg-gray-50 p-1 rounded-lg" />
         </div>
         <div className="mt-4">
-          <p className="font-medium border-b mb-2 border-black">Component</p>
-          <div className="grid grid-cols-2 gap-2">
+          {/* <div className="grid grid-cols-2 gap-2">
             <div
               className="select-none cursor-pointer p-3 rounded shadow border bg-white flex items-center flex-col gap-2"
               onDragStart={(e) => handleDragStart(e, ItemType.TEXT)}
@@ -201,7 +205,18 @@ export default function Editor(props: EditorProps) {
               <SquareIcon className="h-4 w-4" />
               <p className="text-sm">Rectangle</p>
             </div>
-          </div>
+            <div
+              className="select-none cursor-pointer p-3 rounded shadow border bg-white flex items-center flex-col gap-2"
+              onDragStart={(e) => handleDragStart(e, ItemType.CIRCLE)}
+              onDragEnd={handleDragEnd}
+              draggable
+            >
+              <CircleIcon className="h-4 w-4" />
+              <p className="text-sm">Circle</p>
+            </div>
+          </div> */}
+          {/* <PropertiesPanel /> */}
+          <ItemPanel />
         </div>
       </div>
     </div>

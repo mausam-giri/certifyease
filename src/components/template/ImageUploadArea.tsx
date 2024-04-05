@@ -1,7 +1,4 @@
-import Konva from "konva";
-import { RefObject, useRef, useState } from "react";
-import useImage from "use-image";
-
+import { useRef, useState } from "react";
 interface ImageUploadAreaProps {
   onImageUpload?: (imageUrl: string) => void;
 }
