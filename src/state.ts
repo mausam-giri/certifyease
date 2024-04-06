@@ -9,11 +9,12 @@ import Konva from "konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { RefObject } from "react";
 import { Rect } from "konva/lib/shapes/Rect";
+import { ShapeConfig } from "konva/lib/Shape";
 const APP_NAMESPACE = "__certifyease_item__";
 
 export interface State {
   selected: string | null;
-  shapes: { [key: string]: any };
+  shapes: { [key: string]: ShapeConfig };
 }
 
 const baseState: State = {
@@ -22,7 +23,9 @@ const baseState: State = {
 };
 
 export const useShapes = createStore(() => {
-  const initialState = JSON.parse(localStorage.getItem(APP_NAMESPACE) || "");
+  const storedData = localStorage.getItem(APP_NAMESPACE);
+  const initialState = storedData ? JSON.parse(storedData) : null;
+
   return { ...baseState, ...initialState };
 });
 
@@ -118,11 +121,7 @@ export const updateAttribute = (attr: string, value: string | number) => {
     }
   });
 };
-export const transformRectangleShape = (
-  node: RefObject<Rect>,
-  id: string,
-  event: KonvaEventObject<Event>
-) => {
+export const transformRectangleShape = (node: RefObject<Rect>, id: string) => {
   // transformer is changing scale of the node
   // and NOT its width or height
   // but in the store we have only width and height

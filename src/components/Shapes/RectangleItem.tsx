@@ -1,65 +1,46 @@
-import {
-  KonvaNodeComponent,
-  Rect as KonvaRect,
-  Transformer,
-} from "react-konva";
+import { Rect as KonvaRect, Transformer } from "react-konva";
 
 import { ShapeType } from "../template/ItemPanel";
-import {
-  ComponentProps,
-  RefObject,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react";
-import { KonvaEventObject, Node, NodeConfig } from "konva/lib/Node";
-import { Box, TransformerConfig } from "konva/lib/shapes/Transformer";
+import { RefObject, useEffect, useRef } from "react";
+import { KonvaEventObject } from "konva/lib/Node";
+import { Box } from "konva/lib/shapes/Transformer";
 import { ShapeConfig } from "konva/lib/Shape";
-import { Rect } from "konva/lib/shapes/Rect";
 import Konva from "konva";
 import { moveShape, selectShape, transformRectangleShape } from "@/state";
 import { LIMITS } from "@/constants/constants";
 
-interface RectangleItemProps extends ShapeConfig {
+export interface RectangleItemProps extends ShapeConfig {
   id: string;
   type: ShapeType;
   isSelected: boolean;
 }
 export default function RectangleItem(props: RectangleItemProps) {
   const { id, type, isSelected, ...shapeProps } = props;
+
   const shapeRef: RefObject<Konva.Rect> = useRef(null);
   const transformerRef: RefObject<Konva.Transformer> = useRef(null);
 
   useEffect(() => {
-    if (isSelected && transformerRef.current && shapeRef.current) {
-      transformerRef.current.nodes();
-      transformerRef.current.getLayer()?.batchDraw();
+    if (props.isSelected && transformerRef.current && shapeRef.current) {
+      transformerRef.current.nodes([shapeRef.current]);
+      transformerRef.current.getLayer()!.batchDraw();
     }
-  }, [isSelected]);
+  }, [JSON.stringify(props)]);
 
-  const handleSelect = useCallback(
-    (evt: KonvaEventObject<MouseEvent>) => {
-      evt.cancelBubble = true;
-      selectShape(id);
-    },
-    [id]
-  );
+  const handleSelect = (evt: KonvaEventObject<MouseEvent>) => {
+    evt.cancelBubble = true;
+    selectShape(id);
+  };
 
-  const handleDrag = useCallback(
-    (evt: KonvaEventObject<DragEvent>) => {
-      moveShape(id, evt);
-    },
-    [id]
-  );
+  const handleDrag = (evt: KonvaEventObject<DragEvent>) => {
+    moveShape(id, evt);
+  };
 
-  const handleTransform = useCallback(
-    (evt: KonvaEventObject<Event>) => {
-      if (shapeRef) {
-        transformRectangleShape(shapeRef, id, evt);
-      }
-    },
-    [id]
-  );
+  const handleTransform = (evt: KonvaEventObject<Event>) => {
+    if (shapeRef.current) {
+      transformRectangleShape(shapeRef, id);
+    }
+  };
 
   function boundBoxCallbackForRectangle(oldBox: Box, newBox: Box): Box {
     if (

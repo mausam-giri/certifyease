@@ -6,6 +6,10 @@ export const SHAPE_TYPES = {
 };
 
 export const DEFAULTS = {
+  CANVAS: {
+    WIDTH: 700,
+    HEIGHT: 700,
+  },
   RECT: {
     STROKE: "#000000",
     FILL: "#ffffff",

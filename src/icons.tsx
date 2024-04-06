@@ -8,8 +8,15 @@ import {
   MdOutlineQrCodeScanner,
 } from "react-icons/md";
 import { PiIdentificationBadge } from "react-icons/pi";
+import { HiMiniEyeDropper } from "react-icons/hi2";
 import { FiType } from "react-icons/fi";
-import { FaRegCircle } from "react-icons/fa";
+import {
+  FaRegCircle,
+  FaAlignLeft,
+  FaAlignRight,
+  FaAlignCenter,
+  FaAlignJustify,
+} from "react-icons/fa";
 export {
   MdSave as SaveIcon,
   MdChevronRight as RightIcon,
@@ -21,4 +28,9 @@ export {
   PiIdentificationBadge as IdentificationIcon,
   FiType as TextIcon,
   FaRegCircle as CircleIcon,
+  HiMiniEyeDropper as DropperIcon,
+  FaAlignLeft as LeftAlignIcon,
+  FaAlignRight as RightAlignIcon,
+  FaAlignCenter as CenterAlignIcon,
+  FaAlignJustify as JustifyAlignIcon,
 };
