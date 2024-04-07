@@ -129,32 +129,32 @@ export default function RectangleProperty() {
           </ItemPropertyButton>
         </div>
       </div> */}
-      {selectedShape.strokeWidth !== 0 && (
-        <div>
-          <div className="mt-4 flex items-start justify-between">
-            <label htmlFor="" className="whitespace-nowrap text-sm">
-              Stroke Width
-            </label>
-            <input
-              type="text"
-              name="strokeWidth"
-              id="strokeWidth"
-              className="w-[60px] h-8 bg-transparent text-center"
-              value={selectedShape.strokeWidth}
-              onChange={handleSliderChange}
-            />
-          </div>
+
+      <div>
+        <div className="mt-4 flex items-start justify-between">
+          <label htmlFor="" className="whitespace-nowrap text-sm">
+            Stroke Width
+          </label>
           <input
-            type="range"
-            className="custom-input-slider"
+            type="text"
             name="strokeWidth"
-            min={0}
-            max={100}
+            id="strokeWidth"
+            className="w-[60px] h-8 bg-transparent text-center"
             value={selectedShape.strokeWidth}
             onChange={handleSliderChange}
           />
         </div>
-      )}
+        <input
+          type="range"
+          className="custom-input-slider"
+          name="strokeWidth"
+          min={0}
+          max={100}
+          value={selectedShape.strokeWidth}
+          onChange={handleSliderChange}
+        />
+      </div>
+
       <ColorPicker
         initialColor={selectedShape.stroke?.toString()}
         onColorChange={handlePropChange("stroke")}
