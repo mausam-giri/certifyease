@@ -3,13 +3,13 @@ interface ImageUploadAreaProps {
   onImageUpload?: (imageUrl: string) => void;
 }
 
-export type ImageItemKind = {
-  "data-item-type": string;
-  id: string;
-  name: string;
-  src: string;
-  image: typeof Image;
-};
+// export type ImageItemKind = {
+//   "data-item-type": string;
+//   id: string;
+//   name: string;
+//   src: string;
+//   image: typeof Image;
+// };
 
 export default function ImageUploadArea(props: ImageUploadAreaProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Editor from "@/components/Editor";
 import ImageUploadArea from "@/components/template/ImageUploadArea";
-import { RightIcon, SaveIcon } from "@/icons";
+import { EditIcon, RightIcon, SaveIcon } from "@/icons";
 
 export default function Template() {
   const [showeditor, setShowEditor] = useState(false);
@@ -17,7 +17,12 @@ export default function Template() {
 
       <div className="flex flex-col ml-[150px] h-screen">
         <div className="flex justify-between items-center bg-gray-300 pt-2 p-1">
-          <div></div>
+          <div>
+            <div className="flex gap-2 justify-between items-center px-4">
+              <p className="font-bold text-lg">Template name</p>
+              <EditIcon className="w-6 h-6 cursor-pointer hover:bg-gray-50 p-1 rounded-lg" />
+            </div>
+          </div>
           <div>
             <button className="flex gap-1 items-center">
               <SaveIcon className="w-4 h-4" />

@@ -14,18 +14,6 @@ interface EditorProps {
   backgroundImage: string;
 }
 
-export enum ItemType {
-  "CIRCLE",
-  "RECTANGLE",
-  "TEXT",
-  "IMAGE",
-}
-export interface ItemTypeProps {
-  type?: ItemType | string | null;
-  x?: number;
-  y?: number;
-}
-
 export default function Editor(props: EditorProps) {
   const canvasParentRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<Konva.Stage>(null);
@@ -123,12 +111,8 @@ export default function Editor(props: EditorProps) {
           </Stage>
         </div>
       </div>
-      <div className="w-[200px] flex flex-col py-4 bg-gray-200">
-        <div className="flex justify-between items-center px-4">
-          <p className="font-bold text-lg">Template name</p>
-          <EditIcon className="w-6 h-6 cursor-pointer hover:bg-gray-50 p-1 rounded-lg" />
-        </div>
-        <div className="mt-4">
+      <div className="w-[240px] flex flex-col py-4 bg-gray-200">
+        <div className="px-4">
           {/* <PropertiesPanel /> */}
           {shapeSelectorState.selected ? <PropertiesPanel /> : <ItemPanel />}
           {/* <ItemPanel /> */}

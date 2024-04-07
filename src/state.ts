@@ -67,6 +67,8 @@ export const createRectangle = ({ x, y }: ItemPositionProps) => {
       fill: DEFAULTS.RECT.FILL,
       stroke: DEFAULTS.RECT.STROKE,
       rotation: DEFAULTS.RECT.ROTATION,
+      strokeWidth: DEFAULTS.RECT.STROKE_WIDTH,
+      cornerRadius: DEFAULTS.RECT.CORNER_RADIUS,
       x,
       y,
     };
@@ -111,14 +113,22 @@ export const moveShape = (
     }
   });
 };
-
-export const updateAttribute = (attr: string, value: string | number) => {
+export interface UpdateAttributeProps {
+  attr: string;
+  value: string | number | boolean | Array<number>;
+}
+export const updateAttribute = ({ attr, value }: UpdateAttributeProps) => {
   setState((state) => {
-    const shape = state.selected && state.shapes[state.selected];
+    state.shapes[state.selected!] = {
+      ...state.shapes[state.selected!],
+      [attr]: value,
+    };
 
-    if (shape) {
-      shape[attr] = value;
-    }
+    // const shape = state.selected && state.shapes[state.selected];
+
+    // if (shape) {
+    //   shape[attr] = value;
+    // }
   });
 };
 export const transformRectangleShape = (node: RefObject<Rect>, id: string) => {

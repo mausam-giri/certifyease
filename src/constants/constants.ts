@@ -16,6 +16,8 @@ export const DEFAULTS = {
     WIDTH: 150,
     HEIGHT: 100,
     ROTATION: 0,
+    STROKE_WIDTH: 1,
+    CORNER_RADIUS: 0,
   },
   CIRCLE: {
     STROKE: "#000000",

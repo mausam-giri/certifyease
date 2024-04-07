@@ -44,9 +44,11 @@ const ItemComponent = (props: ItemComponentProps) => {
 
 export default function ItemPanel() {
   return (
-    <aside>
-      <h2>Components</h2>
-      <div>
+    <aside className="space-y-4">
+      <div className="border-b pb-1 border-gray-400">
+        <h2>Components</h2>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
         <ItemComponent
           componentName="Text"
           type={SHAPE_TYPES.TEXT as ShapeType}

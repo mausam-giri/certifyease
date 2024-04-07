@@ -13,6 +13,7 @@
     "@halka/state": "^1.1.1",
     "@types/react-router-dom": "^5.3.3",
     "clamp": "^1.0.1",
+    "clsx": "^2.1.0",
     "immer": "^10.0.4",
     "konva": "^9.3.6",
     "localforage": "^1.10.0",

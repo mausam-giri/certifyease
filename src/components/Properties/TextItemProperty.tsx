@@ -1,13 +1,21 @@
 import { SHAPE_TYPES } from "@/constants/constants";
 import {
+  BoldIcon,
   CenterAlignIcon,
   DropperIcon,
+  ItalicIcon,
   JustifyAlignIcon,
   LeftAlignIcon,
+  MinusIcon,
+  PlusIcon,
   RightAlignIcon,
+  StrikeThroughIcon,
+  UnderlinedIcon,
 } from "@/icons";
 import { State, useShapes } from "@/state";
 import { useEffect, useRef, useState } from "react";
+import ColorPicker from "../ColorPicker";
+import ItemPropertyButton from "../ItemPropertyButton";
 
 const FONT_API_KEY = "AIzaSyDyYP6zaxyZKvPiT9-Z6hMlSTIkJmHTvXc";
 
@@ -79,29 +87,13 @@ const FontSelector = (props: FontSelectorProps) => {
 
 export default function TextItemProperty() {
   const selectedShape: State = useShapes();
-  const colorPickerRef = useRef<HTMLInputElement>(null);
   const [selectedColor, setSelectedColor] = useState("#000000");
-  function handleColorPicker(evt: React.MouseEvent<HTMLDivElement>) {
-    if (colorPickerRef.current) {
-      colorPickerRef.current.click();
-      evt.currentTarget.style.backgroundColor = colorPickerRef.current.value;
-    }
-  }
 
-  function handleInputTextColorChange(
-    event: React.ChangeEvent<HTMLInputElement>
-  ) {
-    const color = event.currentTarget.value;
-    // if(/^#([A-Fa-f0-9]{6})$/.test(color)){}
-    setSelectedColor(color);
-    if (colorPickerRef.current) {
-      colorPickerRef.current.value = color;
+  function handleFontSizeChange(evt: React.ChangeEvent<HTMLInputElement>) {
+    const fontSize = parseInt(evt.target.value);
+    if (fontSize < 0 || fontSize > 300) {
+      evt.target.value = "16";
     }
-  }
-
-  function handleInputColorChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const color = event.currentTarget.value;
-    setSelectedColor(color);
   }
 
   return (
@@ -113,132 +105,80 @@ export default function TextItemProperty() {
         <input type="text" name="text" id="text" />
       </div>
       <div>
+        <label htmlFor="fontFamily" className="text-sm">
+          Font Family
+        </label>
+        <select name="fontFamily" id="fontFamily"></select>
+      </div>
+      <div>
         <label htmlFor="fontSize" className="text-sm">
           Font Size
         </label>
         <div className="relative flex items-center">
-          <button
-            type="button"
-            id="decrement-button"
-            data-input-counter-decrement="quantity-input"
-            className="m-0 rounded-none bg-gray-100  hover:bg-gray-200 border border-gray-300 rounded-s-lg py-2 px-3 h-10 focus:ring-gray-100 focus:ring-2 focus:outline-none z-[14]"
-          >
-            <svg
-              className="w-3 h-3 text-gray-900"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 18 2"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1 1h16"
-              />
-            </svg>
-          </button>
+          <ItemPropertyButton className="rounded-s-lg">
+            <MinusIcon className="h-4 w-4 text-gray-900" />
+          </ItemPropertyButton>
+
           <input
-            type="text"
+            type="number"
             id="fontSize"
             name="fontSize"
-            className="bg-gray-50 border-x-0 border-gray-300 h-10 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-2.5 rounded-none z-[12]"
-            placeholder="999"
+            className=" input-no-arrow bg-gray-50 border-x-0 border-gray-300 h-10 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-2.5 rounded-none z-[12]"
+            placeholder="60"
             required
+            min={6}
+            max={300}
+            onChange={handleFontSizeChange}
           />
-          <button
-            type="button"
-            id="increment-button"
-            data-input-counter-increment="quantity-input"
-            className="m-0 rounded-none bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg py-2 px-3 h-10 focus:ring-gray-100  focus:ring-2 focus:outline-none z-[13]"
-          >
-            <svg
-              className="w-3 h-3 text-gray-900 "
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 18 18"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                strokeWidth="2"
-                d="M9 1v16M1 9h16"
-              />
-            </svg>
-          </button>
+          <ItemPropertyButton className="rounded-e-lg">
+            <PlusIcon className="h-4 w-4 text-gray-900" />
+          </ItemPropertyButton>
         </div>
       </div>
-      <div className="gap-2">
-        <label htmlFor="fill" className="py-1/2 text-sm whitespace-nowrap">
-          Color
-        </label>
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            name="fill"
-            id="fill"
-            className=""
-            value={selectedColor}
-            placeholder="#000000"
-            onChange={handleInputTextColorChange}
-            maxLength={7}
-            // pattern="#[A-Fa-f0-9]{6}"
-          />
-          <div className="h-full relative">
-            <div
-              className="cursor-pointer rounded-full p-2 bg-slate-900 h-full shadow-md"
-              onClick={handleColorPicker}
-              style={{ backgroundColor: selectedColor }}
-            >
-              <DropperIcon className="filter invert mix-blend-difference" />
-            </div>
-            <input
-              type="color"
-              ref={colorPickerRef}
-              name="color-picker"
-              id="color-picker"
-              className="absolute top-0 right-full opacity-0 !w-[0px] !h-[0px] pointer-events-none"
-              onChange={handleInputColorChange}
-            />
-          </div>
-        </div>
-      </div>
+      <ColorPicker
+        initialColor={selectedColor}
+        onColorChange={setSelectedColor}
+      />
       <div>
         <p className="text-sm">Alignment</p>
         <div className="grid grid-cols-4">
-          <button
-            type="button"
-            className="m-0 rounded-none bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-s-lg py-2 px-3 h-10 focus:ring-gray-100  focus:ring-2 focus:outline-none z-[13] flex items-center justify-center"
-          >
-            <LeftAlignIcon className="h-3 w-3 text-gray-900" />
-          </button>
-          <button
-            type="button"
-            className="m-0 rounded-none bg-gray-100 hover:bg-gray-200 border border-gray-300 py-2 px-3 h-10 focus:ring-gray-100  focus:ring-2 focus:outline-none z-[13] flex items-center justify-center"
-          >
-            <CenterAlignIcon className="h-3 w-3 text-gray-900" />
-          </button>
-          <button
-            type="button"
-            className="m-0 rounded-none bg-gray-100 hover:bg-gray-200 border border-gray-300 py-2 px-3 h-10 focus:ring-gray-100  focus:ring-2 focus:outline-none z-[13] flex items-center justify-center"
-          >
-            <RightAlignIcon className="h-3 w-3 text-gray-900" />
-          </button>
-          <button
-            type="button"
-            className="m-0 rounded-none bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-e-lg py-2 px-3 h-10 focus:ring-gray-100  focus:ring-2 focus:outline-none z-[13] flex items-center justify-center"
-          >
-            <JustifyAlignIcon className="h-3 w-3 text-gray-900" />
-          </button>
+          <ItemPropertyButton className="rounded-s-lg">
+            <LeftAlignIcon className="h-5 w-5 text-gray-900" />
+          </ItemPropertyButton>
+
+          <ItemPropertyButton>
+            <CenterAlignIcon className="h-5 w-5 text-gray-900" />
+          </ItemPropertyButton>
+
+          <ItemPropertyButton>
+            <RightAlignIcon className="h-5 w-5 text-gray-900" />
+          </ItemPropertyButton>
+
+          <ItemPropertyButton className="rounded-e-lg">
+            <JustifyAlignIcon className="h-5 w-5 text-gray-900" />
+          </ItemPropertyButton>
         </div>
       </div>
 
       <div>
         <p className="text-sm">Decoration</p>
-        <div className=""></div>
+        <div className="grid grid-cols-4">
+          <ItemPropertyButton className="rounded-s-lg">
+            <BoldIcon className="h-5 w-5 text-gray-700" />
+          </ItemPropertyButton>
+
+          <ItemPropertyButton>
+            <ItalicIcon className="h-5 w-5 text-gray-700" />
+          </ItemPropertyButton>
+
+          <ItemPropertyButton>
+            <UnderlinedIcon className="h-5 w-5 text-gray-700" />
+          </ItemPropertyButton>
+
+          <ItemPropertyButton className="rounded-e-lg">
+            <StrikeThroughIcon className="h-5 w-5 text-gray-900" />
+          </ItemPropertyButton>
+        </div>
       </div>
     </div>
   );
