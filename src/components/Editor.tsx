@@ -3,9 +3,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Image as KonvaImage, Layer, Stage } from "react-konva";
 import useImage from "use-image";
 import { EditIcon } from "@/icons";
-import PropertiesPanel from "./template/PropertiesPanel";
-import ItemPanel from "./template/ItemPanel";
-import { State, clearSelection, createRectangle, useShapes } from "@/state";
+import PropertiesPanel from "./Panels/PropertiesPanel";
+import ItemPanel from "./Panels/ItemPanel";
+import {
+  State,
+  clearSelection,
+  createRectangle,
+  createText,
+  useShapes,
+} from "@/state";
 import { DRAG_DATA_KEY, SHAPE_TYPES } from "@/constants/constants";
 import Shape from "./Shape";
 import { ShapeConfig } from "konva/lib/Shape";
@@ -17,6 +23,8 @@ interface EditorProps {
 export default function Editor(props: EditorProps) {
   const canvasParentRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<Konva.Stage>(null);
+  const layerRef = useRef<Konva.Layer>(null);
+  Konva.pixelRatio = window.devicePixelRatio;
 
   const [canvasSize, setCanvasSize] = useState({
     width: 0,
@@ -72,17 +80,33 @@ export default function Editor(props: EditorProps) {
         JSON.parse(draggedData);
       stageRef.current.setPointersPositions(event);
       const coords = stageRef.current.getPointerPosition();
-
-      if (type === SHAPE_TYPES.RECT && coords) {
-        console.log(type, "state ", shapes, "coords", coords);
-        console.log("creating rectangle at coords", {
-          x: coords.x - offsetX,
-          y: coords.y - offsetY,
-        });
-        createRectangle({
-          x: coords.x - offsetX,
-          y: coords.y - offsetY,
-        });
+      if (coords) {
+        if (type === SHAPE_TYPES.RECT) {
+          //
+          console.log(type, "state ", shapes, "coords", coords);
+          console.log("creating rectangle at coords", {
+            x: coords.x - offsetX,
+            y: coords.y - offsetY,
+          });
+          //
+          createRectangle({
+            x: coords.x - offsetX,
+            y: coords.y - offsetY,
+          });
+        }
+        if (type === SHAPE_TYPES.TEXT) {
+          //
+          console.log(type, "state ", shapes, "coords", coords);
+          console.log("creating rectangle at coords", {
+            x: coords.x - offsetX,
+            y: coords.y - offsetY,
+          });
+          //
+          createText({
+            x: coords.x - offsetX,
+            y: coords.y - offsetY,
+          });
+        }
       }
     }
   }, []);
@@ -102,7 +126,7 @@ export default function Editor(props: EditorProps) {
             height={canvasSize.height || 0}
             onClick={clearSelection}
           >
-            <Layer>
+            <Layer ref={layerRef}>
               <BackgroundImage />
               {shapes.map((shape) => (
                 <Shape key={shape[0]} shape={{ ...shape[1], id: shape[0] }} />

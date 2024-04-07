@@ -41,5 +41,18 @@ export const LIMITS = {
     MAX: 500,
     MIN: 5,
   },
+  TEXT: {
+    MIN: 20,
+  },
 };
+
+export const FONT_OPTIONS = [
+  "Calibri",
+  "Merriweather",
+  "Comic Neue",
+  "Source Sans Pro",
+  "Space Mono",
+  "Roboto",
+];
+
 export const DRAG_DATA_KEY = "__drag_element_payload__";

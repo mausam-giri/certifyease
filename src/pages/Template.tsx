@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Editor from "@/components/Editor";
-import ImageUploadArea from "@/components/template/ImageUploadArea";
+import ImageUploadArea from "@/components/Panels/ImageUploadPanel";
 import { EditIcon, RightIcon, SaveIcon } from "@/icons";
 
 export default function Template() {

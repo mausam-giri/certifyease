@@ -1,4 +1,4 @@
-import { SHAPE_TYPES } from "@/constants/constants";
+import { FONT_OPTIONS, SHAPE_TYPES } from "@/constants/constants";
 import {
   BoldIcon,
   CenterAlignIcon,
@@ -12,10 +12,16 @@ import {
   StrikeThroughIcon,
   UnderlinedIcon,
 } from "@/icons";
-import { State, useShapes } from "@/state";
-import { useEffect, useRef, useState } from "react";
-import ColorPicker from "../ColorPicker";
-import ItemPropertyButton from "../ItemPropertyButton";
+import {
+  State,
+  UpdateAttributeProps,
+  updateAttribute,
+  useShapes,
+} from "@/state";
+import { useCallback, useEffect, useRef, useState } from "react";
+import ColorPicker from "../PanelComponents/ColorPicker";
+import ItemPropertyButton from "../PanelComponents/ItemPropertyButton";
+import { ShapeConfig } from "konva/lib/Shape";
 
 const FONT_API_KEY = "AIzaSyDyYP6zaxyZKvPiT9-Z6hMlSTIkJmHTvXc";
 
@@ -86,8 +92,9 @@ const FontSelector = (props: FontSelectorProps) => {
 };
 
 export default function TextItemProperty() {
-  const selectedShape: State = useShapes();
-  const [selectedColor, setSelectedColor] = useState("#000000");
+  const selectedShape: ShapeConfig = useShapes(
+    (state: State) => state.shapes[state.selected!]
+  );
 
   function handleFontSizeChange(evt: React.ChangeEvent<HTMLInputElement>) {
     const fontSize = parseInt(evt.target.value);
@@ -96,48 +103,101 @@ export default function TextItemProperty() {
     }
   }
 
+  const updateAttr = useCallback(({ attr, value }: UpdateAttributeProps) => {
+    updateAttribute({ attr, value });
+  }, []);
+
+  function handleColorChange(color: string): void {
+    updateAttr({ attr: "fill", value: color });
+  }
+
+  function handlePropChange(
+    attr: string,
+    parser?: (value: string) => string | number
+  ) {
+    return (value: string) => {
+      let val = parser?.(value) ?? value;
+      if (parser && Number.isNaN(val)) val = 0;
+      updateAttr({ attr, value: val });
+    };
+  }
+
   return (
     <div className="space-y-2">
       <div>
         <label htmlFor="text" className="text-sm">
           Label Text
         </label>
-        <input type="text" name="text" id="text" />
+        <input
+          type="text"
+          name="text"
+          id="text"
+          value={selectedShape.text}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handlePropChange("text")(e.target.value)
+          }
+        />
       </div>
       <div>
         <label htmlFor="fontFamily" className="text-sm">
           Font Family
         </label>
-        <select name="fontFamily" id="fontFamily"></select>
+        {/* <select
+          name="fontFamily"
+          id="fontFamily"
+          value={selectedShape.fontFamily}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            handlePropChange("fontFamily")(e.currentTarget.value)
+          }
+        >
+          <option value="Merriweather">Merriweather</option>
+          <option value="Comic Neue">Comic Neue</option>
+          <option value="Source Sans Pro">Source Sans Pro</option>
+          <option value="Space Mono">Space Mono</option>
+          <option value="Roboto">Roboto</option>
+        </select> */}
+        <input
+          type="search"
+          id="fontInput"
+          list="fontOptions"
+          value={selectedShape.fontFamily}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handlePropChange("fontFamily")(e.target.value)
+          }
+        />
+        <datalist id="fontOptions">
+          {FONT_OPTIONS.map((font, index) => (
+            <option key={index} value={font} />
+          ))}
+        </datalist>
       </div>
       <div>
         <label htmlFor="fontSize" className="text-sm">
           Font Size
         </label>
         <div className="relative flex items-center">
-          <ItemPropertyButton className="rounded-s-lg">
+          <ItemPropertyButton onClick={} className="rounded-s-lg">
             <MinusIcon className="h-4 w-4 text-gray-900" />
           </ItemPropertyButton>
 
           <input
             type="number"
-            id="fontSize"
+            ref={fontSizeRef}
             name="fontSize"
             className=" input-no-arrow bg-gray-50 border-x-0 border-gray-300 h-10 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2 px-2.5 rounded-none z-[12]"
-            placeholder="60"
-            required
+            value={selectedShape.fontSize}
             min={6}
             max={300}
             onChange={handleFontSizeChange}
           />
-          <ItemPropertyButton className="rounded-e-lg">
+          <ItemPropertyButton onClick={} className="rounded-e-lg">
             <PlusIcon className="h-4 w-4 text-gray-900" />
           </ItemPropertyButton>
         </div>
       </div>
       <ColorPicker
-        initialColor={selectedColor}
-        onColorChange={setSelectedColor}
+        initialColor={selectedShape.fill}
+        onColorChange={handleColorChange}
       />
       <div>
         <p className="text-sm">Alignment</p>

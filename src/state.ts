@@ -9,7 +9,7 @@ import Konva from "konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { RefObject } from "react";
 import { Rect } from "konva/lib/shapes/Rect";
-import { ShapeConfig } from "konva/lib/Shape";
+import { Shape, ShapeConfig } from "konva/lib/Shape";
 const APP_NAMESPACE = "__certifyease_item__";
 
 export interface State {
@@ -88,6 +88,20 @@ export const createCircle = ({ x, y }: ItemPositionProps) => {
   });
 };
 
+export const createText = ({ x, y }: ItemPositionProps) => {
+  setState((state) => {
+    state.shapes[nanoid()] = {
+      type: SHAPE_TYPES.TEXT,
+      text: DEFAULTS.TEXT.TEXT,
+      fontSize: DEFAULTS.TEXT.FONTSIZE,
+      fontFamily: DEFAULTS.TEXT.FONTFAMILY,
+      fill: DEFAULTS.TEXT.FILL,
+      x,
+      y,
+    };
+  });
+};
+
 export const selectShape = (id: string) => {
   setState((state) => {
     state.selected = id;
@@ -131,7 +145,11 @@ export const updateAttribute = ({ attr, value }: UpdateAttributeProps) => {
     // }
   });
 };
-export const transformRectangleShape = (node: RefObject<Rect>, id: string) => {
+
+export function transformRectangleShape<T extends Shape>(
+  node: RefObject<T>,
+  id: string
+) {
   // transformer is changing scale of the node
   // and NOT its width or height
   // but in the store we have only width and height
@@ -165,4 +183,4 @@ export const transformRectangleShape = (node: RefObject<Rect>, id: string) => {
       );
     }
   });
-};
+}

@@ -13,7 +13,7 @@ export default function Shape(props: ShapeProps) {
   );
   if (props.shape.type === SHAPE_TYPES.RECT) {
     return <RectangleItem {...props.shape} isSelected={isSelected} />;
-  } else if (props.shape.type === SHAPE_TYPES.CIRCLE) {
+  } else if (props.shape.type === SHAPE_TYPES.TEXT) {
     return <TextItem {...props.shape} isSelected={isSelected} />;
   }
 

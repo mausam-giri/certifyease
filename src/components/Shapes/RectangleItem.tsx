@@ -1,15 +1,15 @@
 import { Rect as KonvaRect, Transformer } from "react-konva";
 
-import { ShapeType } from "../template/ItemPanel";
+import { ShapeType } from "../Panels/ItemPanel";
 import { RefObject, useEffect, useRef } from "react";
 import { KonvaEventObject } from "konva/lib/Node";
 import { Box } from "konva/lib/shapes/Transformer";
-import { ShapeConfig } from "konva/lib/Shape";
 import Konva from "konva";
 import { moveShape, selectShape, transformRectangleShape } from "@/state";
 import { LIMITS } from "@/constants/constants";
+import { RectConfig } from "konva/lib/shapes/Rect";
 
-export interface RectangleItemProps extends ShapeConfig {
+export interface RectangleItemProps extends RectConfig {
   id: string;
   type: ShapeType;
   isSelected: boolean;
@@ -36,7 +36,7 @@ export default function RectangleItem(props: RectangleItemProps) {
     moveShape(id, evt);
   };
 
-  const handleTransform = (evt: KonvaEventObject<Event>) => {
+  const handleTransform = () => {
     if (shapeRef.current) {
       transformRectangleShape(shapeRef, id);
     }
@@ -68,10 +68,32 @@ export default function RectangleItem(props: RectangleItemProps) {
       />
       {isSelected && (
         <Transformer
-          anchorSize={5}
+          anchorSize={10}
           borderDash={[6, 2]}
+          rotationSnaps={[0, 90, 180, 270]}
           ref={transformerRef}
           boundBoxFunc={boundBoxCallbackForRectangle}
+          anchorCornerRadius={10}
+          anchorStyleFunc={(anchor) => {
+            if (
+              anchor.hasName("top-center") ||
+              anchor.hasName("bottom-center")
+            ) {
+              anchor.height(6);
+              anchor.offsetY(3);
+              anchor.width(30);
+              anchor.offsetX(15);
+            }
+            if (
+              anchor.hasName("middle-left") ||
+              anchor.hasName("middle-right")
+            ) {
+              anchor.height(30);
+              anchor.offsetY(15);
+              anchor.width(6);
+              anchor.offsetX(3);
+            }
+          }}
         />
       )}
     </>

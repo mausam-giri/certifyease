@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import ColorPicker from "../ColorPicker";
+import ColorPicker from "../PanelComponents/ColorPicker";
 // import ItemPropertyButton from "../ItemPropertyButton";
 // import {
 //   NoOutlineIcon,

@@ -103,3 +103,8 @@ input.custom-input-slider::-moz-range-track {
   background-color: #f3f4f6;
   border-radius: 9999px;
 }
+
+canvas {
+  font-smooth: never;
+  -webkit-font-smoothing: none;
+}
