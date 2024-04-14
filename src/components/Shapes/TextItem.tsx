@@ -59,6 +59,7 @@ export default function TextItem(props: TextItemProps) {
         ref={shapeRef}
         {...shapeProps}
         draggable
+        perfectDrawEnabled={false}
       />
       {isSelected && (
         <Transformer
@@ -67,22 +68,12 @@ export default function TextItem(props: TextItemProps) {
           ref={transformerRef}
           anchorCornerRadius={10}
           rotationSnaps={[0, 90, 180, 270]}
-          enabledAnchors={["middle-left", "middle-right"]}
-          // top-left, top-center, top-right,
-          // middle-left, middle-right,
-          // bottom-left, bottom-center, bottom-right
-
-          // anchorStyleFunc={(anchor) => {
-          //   if (
-          //     anchor.hasName("middle-left") ||
-          //     anchor.hasName("middle-right")
-          //   ) {
-          //     anchor.height(6);
-          //     anchor.offsetY(15);
-          //     anchor.width(6);
-          //     anchor.offsetX(3);
-          //   }
-          // }}
+          enabledAnchors={[
+            "middle-left",
+            "middle-right",
+            "top-center",
+            "bottom-center",
+          ]}
           padding={10}
           boundBoxFunc={boundBoxCallbackForText}
         />

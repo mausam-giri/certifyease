@@ -57,14 +57,15 @@ export default function RectangleItem(props: RectangleItemProps) {
   return (
     <>
       <KonvaRect
+        {...shapeProps}
         onClick={handleSelect}
         onTap={handleSelect}
         onDragStart={handleSelect}
         ref={shapeRef}
-        {...shapeProps}
         draggable
         onDragEnd={handleDrag}
         onTransformEnd={handleTransform}
+        perfectDrawEnabled={false}
       />
       {isSelected && (
         <Transformer

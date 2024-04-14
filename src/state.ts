@@ -6,10 +6,12 @@ import clamp from "./utils/clamp";
 import { DEFAULTS, LIMITS, SHAPE_TYPES } from "./constants/constants";
 
 import Konva from "konva";
-import { KonvaEventObject } from "konva/lib/Node";
+// import { KonvaEventObject } from "konva/lib/Node";
 import { RefObject } from "react";
-import { Rect } from "konva/lib/shapes/Rect";
+// import { Rect } from "konva/lib/shapes/Rect";
+import { Text as KonvaText } from "konva/lib/shapes/Text";
 import { Shape, ShapeConfig } from "konva/lib/Shape";
+// import { TextConfig } from "konva/lib/shapes/Text";
 const APP_NAMESPACE = "__certifyease_item__";
 
 export interface State {
@@ -102,6 +104,19 @@ export const createText = ({ x, y }: ItemPositionProps) => {
   });
 };
 
+export const createImage = ({ x, y }: ItemPositionProps) => {
+  setState((state) => {
+    state.shapes[nanoid()] = {
+      type: SHAPE_TYPES.IMAGE,
+      width: DEFAULTS.IMAGE.WIDTH,
+      height: DEFAULTS.IMAGE.HEIGHT,
+      image: DEFAULTS.IMAGE.SRC,
+      x,
+      y,
+    };
+  });
+};
+
 export const selectShape = (id: string) => {
   setState((state) => {
     state.selected = id;
@@ -129,7 +144,7 @@ export const moveShape = (
 };
 export interface UpdateAttributeProps {
   attr: string;
-  value: string | number | boolean | Array<number>;
+  value: string | number | boolean | Array<number> | HTMLImageElement;
 }
 export const updateAttribute = ({ attr, value }: UpdateAttributeProps) => {
   setState((state) => {
@@ -183,4 +198,24 @@ export function transformRectangleShape<T extends Shape>(
       );
     }
   });
+}
+
+export function transformText(nodeRef: RefObject<KonvaText>, id: string) {
+  if (nodeRef.current) {
+    const textNode = nodeRef.current;
+    const newWidth = textNode.width() * textNode.scaleX();
+    const newHeight = textNode.height() * textNode.scaleY();
+
+    // textNode.setAttrs({
+    //   width: newWidth,
+    //   scaleX: 1
+    // })
+    setState((state) => {
+      const shape = state.shapes[id];
+      shape.width = newWidth;
+      shape.height = newHeight;
+      shape.scaleX = 1;
+      shape.scaleY = 1;
+    });
+  }
 }

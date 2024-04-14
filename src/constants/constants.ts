@@ -30,7 +30,11 @@ export const DEFAULTS = {
     FONTFAMILY: "Calibri",
     FILL: "#000000",
   },
-  IMAGE: {},
+  IMAGE: {
+    WIDTH: 100,
+    HEIGHT: 150,
+    SRC: null,
+  },
 };
 export const LIMITS = {
   RECT: {
@@ -43,6 +47,10 @@ export const LIMITS = {
   },
   TEXT: {
     MIN: 20,
+  },
+  IMAGE: {
+    MIN: 20,
+    MAX: 500,
   },
 };
 

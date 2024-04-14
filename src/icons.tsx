@@ -16,6 +16,8 @@ import {
   MdFormatAlignRight,
   MdFormatAlignCenter,
   MdFormatAlignJustify,
+  MdDeleteForever,
+  MdCloudUpload,
 } from "react-icons/md";
 import { PiIdentificationBadge } from "react-icons/pi";
 import { HiMiniEyeDropper } from "react-icons/hi2";
@@ -140,4 +142,6 @@ export {
   Dash2Icon,
   Dash3Icon,
   DashSmallIcon,
+  MdDeleteForever as DeleteIcon,
+  MdCloudUpload as UploadIcon,
 };

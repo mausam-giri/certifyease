@@ -18,10 +18,11 @@ import {
   updateAttribute,
   useShapes,
 } from "@/state";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import ColorPicker from "../PanelComponents/ColorPicker";
 import ItemPropertyButton from "../PanelComponents/ItemPropertyButton";
-import { ShapeConfig } from "konva/lib/Shape";
+// import { ShapeConfig } from "konva/lib/Shape";
+import { TextConfig } from "konva/lib/shapes/Text";
 
 const FONT_API_KEY = "AIzaSyDyYP6zaxyZKvPiT9-Z6hMlSTIkJmHTvXc";
 
@@ -92,15 +93,21 @@ const FontSelector = (props: FontSelectorProps) => {
 };
 
 export default function TextItemProperty() {
-  const selectedShape: ShapeConfig = useShapes(
+  const selectedShape: TextConfig = useShapes(
     (state: State) => state.shapes[state.selected!]
   );
+  const fontSizeRef = useRef<HTMLInputElement>(null);
 
   function handleFontSizeChange(evt: React.ChangeEvent<HTMLInputElement>) {
     const fontSize = parseInt(evt.target.value);
     if (fontSize < 0 || fontSize > 300) {
       evt.target.value = "16";
     }
+    // console.log("Size", fontSize);
+    updateAttr({
+      attr: "fontSize",
+      value: parseInt(evt.target.value),
+    });
   }
 
   const updateAttr = useCallback(({ attr, value }: UpdateAttributeProps) => {
@@ -110,6 +117,33 @@ export default function TextItemProperty() {
   function handleColorChange(color: string): void {
     updateAttr({ attr: "fill", value: color });
   }
+
+  function handleAlignButtonClick(evt: MouseEvent<HTMLButtonElement>) {
+    let value = evt.currentTarget.name;
+    if (value) {
+      updateAttr({
+        attr: "align",
+        value,
+      });
+    }
+  }
+  function handleDecorateButtonClick(evt: React.MouseEvent<HTMLButtonElement>) {
+    let value = evt.currentTarget.name;
+
+    if (value && selectedShape.textDecoration !== value) {
+      updateAttr({
+        attr: "textDecoration",
+        value,
+      });
+    } else {
+      updateAttr({
+        attr: "textDecoration",
+        value: "undefined",
+      });
+    }
+  }
+
+  // textDecoration
 
   function handlePropChange(
     attr: string,
@@ -122,8 +156,25 @@ export default function TextItemProperty() {
     };
   }
 
+  function handleFontStyleButtonClick(evt: MouseEvent<HTMLButtonElement>) {
+    let value = evt.currentTarget.name;
+
+    if (value && selectedShape.fontStyle !== value) {
+      updateAttr({
+        attr: "fontStyle",
+        value,
+      });
+    } else {
+      updateAttr({
+        attr: "fontStyle",
+        value: "normal",
+      });
+    }
+  }
+
   return (
     <div className="space-y-2">
+      {/* Text Label */}
       <div>
         <label htmlFor="text" className="text-sm">
           Label Text
@@ -138,11 +189,12 @@ export default function TextItemProperty() {
           }
         />
       </div>
+      {/* Font Family */}
       <div>
         <label htmlFor="fontFamily" className="text-sm">
           Font Family
         </label>
-        {/* <select
+        <select
           name="fontFamily"
           id="fontFamily"
           value={selectedShape.fontFamily}
@@ -155,28 +207,28 @@ export default function TextItemProperty() {
           <option value="Source Sans Pro">Source Sans Pro</option>
           <option value="Space Mono">Space Mono</option>
           <option value="Roboto">Roboto</option>
-        </select> */}
-        <input
-          type="search"
-          id="fontInput"
-          list="fontOptions"
-          value={selectedShape.fontFamily}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handlePropChange("fontFamily")(e.target.value)
-          }
-        />
-        <datalist id="fontOptions">
-          {FONT_OPTIONS.map((font, index) => (
-            <option key={index} value={font} />
-          ))}
-        </datalist>
+        </select>
       </div>
+      {/* Font Size */}
       <div>
         <label htmlFor="fontSize" className="text-sm">
           Font Size
         </label>
         <div className="relative flex items-center">
-          <ItemPropertyButton onClick={} className="rounded-s-lg">
+          <ItemPropertyButton
+            onClick={() => {
+              if (
+                fontSizeRef.current &&
+                parseInt(fontSizeRef.current.value) > 8
+              ) {
+                updateAttr({
+                  attr: "fontSize",
+                  value: parseInt(fontSizeRef.current.value) - 1,
+                });
+              }
+            }}
+            className="rounded-s-lg"
+          >
             <MinusIcon className="h-4 w-4 text-gray-900" />
           </ItemPropertyButton>
 
@@ -190,52 +242,90 @@ export default function TextItemProperty() {
             max={300}
             onChange={handleFontSizeChange}
           />
-          <ItemPropertyButton onClick={} className="rounded-e-lg">
+          <ItemPropertyButton
+            onClick={() => {
+              if (
+                fontSizeRef.current &&
+                parseInt(fontSizeRef.current.value) >= 8
+              ) {
+                updateAttr({
+                  attr: "fontSize",
+                  value: parseInt(fontSizeRef.current.value) + 1,
+                });
+              }
+            }}
+            className="rounded-e-lg"
+          >
             <PlusIcon className="h-4 w-4 text-gray-900" />
           </ItemPropertyButton>
         </div>
       </div>
+      {/* Text Color */}
       <ColorPicker
         initialColor={selectedShape.fill}
         onColorChange={handleColorChange}
       />
+      {/* Text Alignment */}
       <div>
         <p className="text-sm">Alignment</p>
         <div className="grid grid-cols-4">
-          <ItemPropertyButton className="rounded-s-lg">
+          <ItemPropertyButton
+            name="left"
+            onClick={handleAlignButtonClick}
+            className="rounded-s-lg"
+          >
             <LeftAlignIcon className="h-5 w-5 text-gray-900" />
           </ItemPropertyButton>
 
-          <ItemPropertyButton>
+          <ItemPropertyButton name="center" onClick={handleAlignButtonClick}>
             <CenterAlignIcon className="h-5 w-5 text-gray-900" />
           </ItemPropertyButton>
 
-          <ItemPropertyButton>
+          <ItemPropertyButton
+            name="right"
+            onClick={handleAlignButtonClick}
+            className="rounded-e-lg"
+          >
             <RightAlignIcon className="h-5 w-5 text-gray-900" />
           </ItemPropertyButton>
 
-          <ItemPropertyButton className="rounded-e-lg">
+          {/* <ItemPropertyButton className="rounded-e-lg">
             <JustifyAlignIcon className="h-5 w-5 text-gray-900" />
-          </ItemPropertyButton>
+          </ItemPropertyButton> */}
         </div>
       </div>
 
+      {/* Text Decoration */}
       <div>
         <p className="text-sm">Decoration</p>
         <div className="grid grid-cols-4">
-          <ItemPropertyButton className="rounded-s-lg">
+          <ItemPropertyButton
+            name="bold"
+            onClick={(e) => handleFontStyleButtonClick(e)}
+            className="rounded-s-lg"
+          >
             <BoldIcon className="h-5 w-5 text-gray-700" />
           </ItemPropertyButton>
 
-          <ItemPropertyButton>
+          <ItemPropertyButton
+            name="italic"
+            onClick={(e) => handleFontStyleButtonClick(e)}
+          >
             <ItalicIcon className="h-5 w-5 text-gray-700" />
           </ItemPropertyButton>
 
-          <ItemPropertyButton>
+          <ItemPropertyButton
+            name="underline"
+            onClick={handleDecorateButtonClick}
+          >
             <UnderlinedIcon className="h-5 w-5 text-gray-700" />
           </ItemPropertyButton>
 
-          <ItemPropertyButton className="rounded-e-lg">
+          <ItemPropertyButton
+            name="line-through"
+            onClick={handleDecorateButtonClick}
+            className="rounded-e-lg"
+          >
             <StrikeThroughIcon className="h-5 w-5 text-gray-900" />
           </ItemPropertyButton>
         </div>

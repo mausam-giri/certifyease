@@ -8,6 +8,7 @@ import ItemPanel from "./Panels/ItemPanel";
 import {
   State,
   clearSelection,
+  createImage,
   createRectangle,
   createText,
   useShapes,
@@ -43,9 +44,8 @@ export default function Editor(props: EditorProps) {
         });
       }
     }
-    window.addEventListener("resize", handleResize);
     handleResize();
-    return () => window.removeEventListener("resize", handleResize);
+    stageRef.current?.batchDraw();
   }, []);
 
   const [image] = useImage(props.backgroundImage);
@@ -76,33 +76,36 @@ export default function Editor(props: EditorProps) {
     const draggedData = event.nativeEvent.dataTransfer?.getData(DRAG_DATA_KEY);
     console.log(event, draggedData);
     if (draggedData && stageRef.current) {
-      const { offsetX, offsetY, type, clientHeight, clientWidth } =
-        JSON.parse(draggedData);
+      // const { offsetX, offsetY, type, clientHeight, clientWidth } =
+      //   JSON.parse(draggedData);
+      const { offsetX, offsetY, type } = JSON.parse(draggedData);
       stageRef.current.setPointersPositions(event);
       const coords = stageRef.current.getPointerPosition();
       if (coords) {
         if (type === SHAPE_TYPES.RECT) {
-          //
           console.log(type, "state ", shapes, "coords", coords);
           console.log("creating rectangle at coords", {
             x: coords.x - offsetX,
             y: coords.y - offsetY,
           });
-          //
           createRectangle({
             x: coords.x - offsetX,
             y: coords.y - offsetY,
           });
         }
         if (type === SHAPE_TYPES.TEXT) {
-          //
           console.log(type, "state ", shapes, "coords", coords);
           console.log("creating rectangle at coords", {
             x: coords.x - offsetX,
             y: coords.y - offsetY,
           });
-          //
           createText({
+            x: coords.x - offsetX,
+            y: coords.y - offsetY,
+          });
+        }
+        if (type === SHAPE_TYPES.IMAGE) {
+          createImage({
             x: coords.x - offsetX,
             y: coords.y - offsetY,
           });
@@ -135,7 +138,7 @@ export default function Editor(props: EditorProps) {
           </Stage>
         </div>
       </div>
-      <div className="w-[240px] flex flex-col py-4 bg-gray-200">
+      <div className="w-[240px] flex flex-col py-4 bg-gray-200 relative">
         <div className="px-4">
           {/* <PropertiesPanel /> */}
           {shapeSelectorState.selected ? <PropertiesPanel /> : <ItemPanel />}

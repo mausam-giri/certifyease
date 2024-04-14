@@ -60,7 +60,7 @@ export default function ItemPanel() {
           Icon={SquareIcon}
         />
         <ItemComponent
-          componentName="Text"
+          componentName="Image"
           type={SHAPE_TYPES.IMAGE as ShapeType}
           Icon={ImageIcon}
         />

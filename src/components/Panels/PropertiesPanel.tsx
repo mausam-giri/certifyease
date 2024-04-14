@@ -2,6 +2,7 @@ import TextItemProperty from "../Properties/TextItemProperty";
 import RectangleProperty from "../Properties/RectangleProperty";
 import { State, useShapes } from "@/state";
 import { SHAPE_TYPES } from "@/constants/constants";
+import ImageProperty from "../Properties/ImageProperty";
 
 const shapeSelector = (state: State) => state.shapes[state.selected!];
 
@@ -16,6 +17,7 @@ export default function PropertiesPanel() {
       <div className="px-4">
         {selectedShape.type === SHAPE_TYPES.RECT && <RectangleProperty />}
         {selectedShape.type === SHAPE_TYPES.TEXT && <TextItemProperty />}
+        {selectedShape.type === SHAPE_TYPES.IMAGE && <ImageProperty />}
       </div>
     </div>
   );
