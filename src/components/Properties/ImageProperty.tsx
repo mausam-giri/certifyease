@@ -2,25 +2,20 @@ import { DeleteIcon, UploadIcon } from "@/icons";
 import { State, updateAttribute, useShapes } from "@/state";
 import { ShapeConfig } from "konva/lib/Shape";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 // import useImage from "use-image";
 
 export default function ImageProperty() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const selectedShape: ShapeConfig = useShapes(
     (state: State) => state.shapes[state.selected!]
   );
 
-  useEffect(() => {
-    console.log(selectedShape);
-  }, [selectedShape]);
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setSelectedFile(file);
+
     const imageUrl = URL.createObjectURL(file);
     const uploadedImage = new Image(200, 300);
     uploadedImage.src = imageUrl;
@@ -34,12 +29,12 @@ export default function ImageProperty() {
   return (
     <div className="space-y-4">
       <div className="dropzone">
-        <div className="text-sm mb-2">
+        {/* <div className="text-sm mb-2">
           <p>Filename</p>
           <p className="py-2 px-3 border border-gray-400 border-dashed rounded-md">
-            {selectedFile?.name}
+            {selectedShape?.name}
           </p>
-        </div>
+        </div> */}
         <input type="file" hidden ref={inputRef} onChange={handleFileChange} />
         <button
           className="w-full flex items-center gap-2"

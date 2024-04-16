@@ -1,8 +1,15 @@
 import Konva from "konva";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { Image as KonvaImage, Layer, Stage } from "react-konva";
 import useImage from "use-image";
-import { EditIcon } from "@/icons";
+// import { EditIcon } from "@/icons";
 import PropertiesPanel from "./Panels/PropertiesPanel";
 import ItemPanel from "./Panels/ItemPanel";
 import {
@@ -20,12 +27,31 @@ import { ShapeConfig } from "konva/lib/Shape";
 interface EditorProps {
   backgroundImage: string;
 }
-
-export default function Editor(props: EditorProps) {
+export type EditorRefHandleProps = {
+  saveCanvas: () => void;
+};
+const Editor = forwardRef<EditorRefHandleProps, EditorProps>((props, ref) => {
   const canvasParentRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<Konva.Stage>(null);
   const layerRef = useRef<Konva.Layer>(null);
   Konva.pixelRatio = window.devicePixelRatio;
+
+  function downloadURI(uri: string | undefined, name: string) {
+    var link = document.createElement("a");
+    link.download = name;
+    link.href = uri!;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  useImperativeHandle(ref, () => ({
+    saveCanvas() {
+      var dataURL = stageRef.current?.toDataURL({ pixelRatio: 3 });
+      console.log(dataURL);
+      downloadURI(dataURL, "stage.png");
+    },
+  }));
 
   const [canvasSize, setCanvasSize] = useState({
     width: 0,
@@ -147,4 +173,6 @@ export default function Editor(props: EditorProps) {
       </div>
     </div>
   );
-}
+});
+
+export default Editor;

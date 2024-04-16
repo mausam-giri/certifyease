@@ -4,6 +4,9 @@ export const SHAPE_TYPES = {
   TEXT: "text",
   IMAGE: "image",
 };
+const sampleImage = new Image();
+sampleImage.crossOrigin = "Anonymous";
+sampleImage.src = "https://picsum.photos/200/300";
 
 export const DEFAULTS = {
   CANVAS: {
@@ -33,7 +36,7 @@ export const DEFAULTS = {
   IMAGE: {
     WIDTH: 100,
     HEIGHT: 150,
-    SRC: null,
+    SRC: sampleImage,
   },
 };
 export const LIMITS = {

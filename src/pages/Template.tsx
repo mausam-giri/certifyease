@@ -1,5 +1,5 @@
-import { useState } from "react";
-import Editor from "@/components/Editor";
+import { useRef, useState } from "react";
+import Editor, { EditorRefHandleProps } from "@/components/Editor";
 import ImageUploadArea from "@/components/Panels/ImageUploadPanel";
 import { EditIcon, RightIcon, SaveIcon } from "@/icons";
 
@@ -10,6 +10,8 @@ export default function Template() {
   const handleImageUpload = (imageUrl: string) => {
     if (imageUrl) setBackgroundImage(imageUrl);
   };
+
+  const editorRef = useRef<EditorRefHandleProps>(null);
 
   return (
     <div className="w-full min-h-screen">
@@ -24,7 +26,10 @@ export default function Template() {
             </div>
           </div>
           <div>
-            <button className="flex gap-1 items-center">
+            <button
+              className="flex gap-1 items-center"
+              onClick={() => editorRef.current?.saveCanvas()}
+            >
               <SaveIcon className="w-4 h-4" />
               <span>Save</span>
             </button>
@@ -49,7 +54,7 @@ export default function Template() {
               </div>
             </div>
           ) : (
-            <Editor backgroundImage={backgroundImage} />
+            <Editor backgroundImage={backgroundImage} ref={editorRef} />
             // <div></div>
           )}
           {/* Sidebar */}

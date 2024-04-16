@@ -25,8 +25,9 @@ export default function ImageItem(props: ImageItemProps) {
   //   "anonymous"
   // );
   // const sampleImage = <img crossOrigin="anonymous" src={DEFAULTS.IMAGE.SRC} />
-  const sampleImage = new Image();
-  sampleImage.src = "https://picsum.photos/200/300.webp";
+  // const sampleImage = new Image();
+  // sampleImage.crossOrigin = "Anonymous";
+  // sampleImage.src = props.image.src;
 
   useEffect(() => {
     if (props.isSelected && transformerRef.current && imageRef.current) {
@@ -66,7 +67,7 @@ export default function ImageItem(props: ImageItemProps) {
     <>
       <KonvaImage
         {...shapeProps}
-        image={sampleImage}
+        image={props.image}
         ref={imageRef}
         onClick={handleSelect}
         onTap={handleSelect}
