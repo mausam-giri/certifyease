@@ -9,7 +9,7 @@ import Konva from "konva";
 // import { KonvaEventObject } from "konva/lib/Node";
 import { RefObject } from "react";
 // import { Rect } from "konva/lib/shapes/Rect";
-import { Text as KonvaText } from "konva/lib/shapes/Text";
+import { Text as KonvaText, TextConfig } from "konva/lib/shapes/Text";
 import { Shape, ShapeConfig } from "konva/lib/Shape";
 // import { TextConfig } from "konva/lib/shapes/Text";
 const APP_NAMESPACE = "__certifyease_item__";
@@ -17,11 +17,13 @@ const APP_NAMESPACE = "__certifyease_item__";
 export interface State {
   selected: string | null;
   shapes: { [key: string]: ShapeConfig };
+  shapeRefs: { [key: string]: RefObject<Shape> };
 }
 
 const baseState: State = {
   selected: null,
   shapes: {},
+  shapeRefs: {},
 };
 
 export const useShapes = createStore(() => {
@@ -48,12 +50,14 @@ interface ItemPositionProps {
   x: number;
   y: number;
 }
-export const TextItem = ({ x, y }: ItemPositionProps) => {
+interface TextItemProps extends TextConfig {}
+
+export const TextItem = (props: TextItemProps) => {
   setState((state) => {
     state.shapes[nanoid()] = {
-      x,
-      y,
-      text: DEFAULTS.TEXT.TEXT,
+      x: props.x,
+      y: props.y,
+      text: props.text || DEFAULTS.TEXT.TEXT,
       fontSize: DEFAULTS.TEXT.FONTSIZE,
       fontFamily: DEFAULTS.TEXT.FONTFAMILY,
       fill: DEFAULTS.TEXT.FILL,
@@ -121,6 +125,42 @@ export const selectShape = (id: string) => {
   setState((state) => {
     state.selected = id;
   });
+};
+
+export const deleteShape = (id: string) => {
+  setState((state) => {
+    const currentShapes = Object.entries(state.shapes);
+    const newShapes = Object.fromEntries(
+      currentShapes.filter(([shapeId, _]) => shapeId !== id)
+    );
+    state.shapes = newShapes;
+    state.selected = null;
+  });
+  // useShapes.set((state: State) => {
+  //   const shapeCopy = Object.assign({}, state);
+  //   shapeCopy.selected = null;
+  //   delete shapeCopy.shapes[id];
+  //   return shapeCopy;
+  // });
+};
+
+export const bindShapeRef = (id: string, ref: RefObject<Shape>) => {
+  setState((state) => {
+    state.shapeRefs[id] = ref;
+  });
+};
+
+export const moveShapeDown = (id: string) => {
+  // id &&
+  setState((state) => {});
+};
+export const moveShapeUp = (id: string) => {
+  id &&
+    setState((state) => {
+      const shape = state.shapes[id];
+      shape.current?.moveUp();
+      console.log(shape.current?.getZIndex());
+    });
 };
 
 export const clearSelection = () => {

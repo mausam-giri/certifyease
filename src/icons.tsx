@@ -25,7 +25,8 @@ import { FiType } from "react-icons/fi";
 import { FaRegCircle } from "react-icons/fa";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import { IoBanOutline } from "react-icons/io5";
-
+import { CgMoveDown, CgMoveUp } from "react-icons/cg";
+import { IoDuplicateOutline } from "react-icons/io5";
 interface CustomIconProps extends React.SVGAttributes<SVGElement> {
   className?: string;
 }
@@ -144,4 +145,7 @@ export {
   DashSmallIcon,
   MdDeleteForever as DeleteIcon,
   MdCloudUpload as UploadIcon,
+  CgMoveDown as PositionDownIcon,
+  CgMoveUp as PositionUpIcon,
+  IoDuplicateOutline as DuplicateIcon,
 };

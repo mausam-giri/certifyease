@@ -5,7 +5,12 @@ import { RefObject, useEffect, useRef } from "react";
 import { KonvaEventObject } from "konva/lib/Node";
 import { Box } from "konva/lib/shapes/Transformer";
 import Konva from "konva";
-import { moveShape, selectShape, transformRectangleShape } from "@/state";
+import {
+  bindShapeRef,
+  moveShape,
+  selectShape,
+  transformRectangleShape,
+} from "@/state";
 import { LIMITS } from "@/constants/constants";
 import { RectConfig } from "konva/lib/shapes/Rect";
 
@@ -19,6 +24,10 @@ export default function RectangleItem(props: RectangleItemProps) {
 
   const shapeRef: RefObject<Konva.Rect> = useRef(null);
   const transformerRef: RefObject<Konva.Transformer> = useRef(null);
+
+  useEffect(() => {
+    bindShapeRef(id, shapeRef);
+  }, [shapeRef.current]);
 
   useEffect(() => {
     if (props.isSelected && transformerRef.current && shapeRef.current) {

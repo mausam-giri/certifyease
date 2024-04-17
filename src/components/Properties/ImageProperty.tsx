@@ -1,16 +1,17 @@
-import { DeleteIcon, UploadIcon } from "@/icons";
-import { State, updateAttribute, useShapes } from "@/state";
-import { ShapeConfig } from "konva/lib/Shape";
+import { UploadIcon } from "@/icons";
+// import { State, updateAttribute, useShapes } from "@/state";
+import { updateAttribute } from "@/state";
+// import { ShapeConfig } from "konva/lib/Shape";
 
 import { useRef } from "react";
 // import useImage from "use-image";
 
 export default function ImageProperty() {
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const selectedShape: ShapeConfig = useShapes(
-    (state: State) => state.shapes[state.selected!]
-  );
+  // const selectedShapeId = useShapes((state: State) => state.selected!);
+  // const selectedShape: ShapeConfig = useShapes(
+  //   (state: State) => state.shapes[state.selected!]
+  // );
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -46,9 +47,12 @@ export default function ImageProperty() {
           Upload image
         </button>
       </div>
-      <button className="bg-red-50 border border-red-300 text-red-600 tracking-wide hover:bg-red-200  focus:ring-red-300  ease-out transition-all duration-300 flex items-center gap-1">
+      {/* <button
+        onClick={() => deleteShape(selectedShapeId)}
+        className="bg-red-50 border border-red-300 text-red-600 tracking-wide hover:bg-red-200  focus:ring-red-300  ease-out transition-all duration-300 flex items-center gap-1"
+      >
         <DeleteIcon className="w-4 h-4" /> Delete
-      </button>
+      </button> */}
     </div>
   );
 }

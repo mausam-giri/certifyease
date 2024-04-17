@@ -18,6 +18,9 @@ import {
   createImage,
   createRectangle,
   createText,
+  deleteShape,
+  moveShapeDown,
+  moveShapeUp,
   useShapes,
 } from "@/state";
 import { DRAG_DATA_KEY, SHAPE_TYPES } from "@/constants/constants";
@@ -29,6 +32,10 @@ interface EditorProps {
 }
 export type EditorRefHandleProps = {
   saveCanvas: () => void;
+  layerMoveShapeDown: () => void;
+  layerMoveShapeUp: () => void;
+  handleDeleteShape: () => void;
+  handleDuplicateShape: () => void;
 };
 const Editor = forwardRef<EditorRefHandleProps, EditorProps>((props, ref) => {
   const canvasParentRef = useRef<HTMLDivElement>(null);
@@ -44,14 +51,6 @@ const Editor = forwardRef<EditorRefHandleProps, EditorProps>((props, ref) => {
     link.click();
     document.body.removeChild(link);
   }
-
-  useImperativeHandle(ref, () => ({
-    saveCanvas() {
-      var dataURL = stageRef.current?.toDataURL({ pixelRatio: 3 });
-      console.log(dataURL);
-      downloadURI(dataURL, "stage.png");
-    },
-  }));
 
   const [canvasSize, setCanvasSize] = useState({
     width: 0,
@@ -94,6 +93,54 @@ const Editor = forwardRef<EditorRefHandleProps, EditorProps>((props, ref) => {
     ShapeConfig
   ][];
   const shapeSelectorState: State = useShapes();
+
+  useImperativeHandle(ref, () => ({
+    saveCanvas() {
+      var dataURL = stageRef.current?.toDataURL({ pixelRatio: 3 });
+      console.log(dataURL);
+      downloadURI(dataURL, "stage.png");
+    },
+    layerMoveShapeDown() {
+      moveShapeDown(shapeSelectorState.selected!);
+    },
+    layerMoveShapeUp() {
+      moveShapeUp(shapeSelectorState.selected!);
+    },
+    handleDeleteShape() {
+      deleteShape(shapeSelectorState.selected!);
+    },
+    handleDuplicateShape() {
+      if (shapeSelectorState.selected) {
+        const shape = shapeSelectorState.shapes[shapeSelectorState.selected];
+        const shapeType = shape.type;
+        const coords = {
+          x: shape.x || 0,
+          y: shape.y || 0,
+        };
+        if (shapeType === SHAPE_TYPES.RECT && coords) {
+          createRectangle({
+            x: coords.x - 10,
+            y: coords.y - 10,
+            ...shape,
+          });
+        }
+        if (shapeType === SHAPE_TYPES.TEXT) {
+          createText({
+            x: coords.x - 10,
+            y: coords.y - 10,
+            text: shape.text,
+          });
+        }
+        if (shapeType === SHAPE_TYPES.IMAGE) {
+          createImage({
+            x: coords.x - 10,
+            y: coords.y - 10,
+            ...shape,
+          });
+        }
+      }
+    },
+  }));
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) =>
     event.preventDefault();
